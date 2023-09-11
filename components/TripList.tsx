@@ -3,12 +3,15 @@ import {FlatList, StyleSheet, Text} from 'react-native';
 import {Button, Modal, Portal} from 'react-native-paper';
 
 import {Trip} from '../types/Trip';
-import {deleteTrip, loadTrips, saveTrip} from '../utils/store';
 import TripForm from './TripForm';
 
-export default function TripList() {
-    const trips = loadTrips();  // TODO: Lataa vain jos ei ole vielä ladattu
+type Props = {
+    trips: Trip[];
+    saveTrip: (trip: Trip) => void;
+    deleteTrip: (trip: Trip) => void;
+};
 
+export default function TripList({trips, saveTrip, deleteTrip}: Props) {
     const [shownIndex, setShownIndex] = useState<number | null>(null);
 
     function ListRow({item: trip, index}: {item: Trip; index: number}) {
@@ -46,7 +49,12 @@ export default function TripList() {
 
     return (
         <>
-            <FlatList data={trips} renderItem={ListRow} style={styles.list} />
+            <FlatList
+                data={trips}
+                renderItem={ListRow}
+                style={styles.list}
+                keyExtractor={(item: Trip) => item.id}
+            />
             <Portal>
                 <TripFormModal />
             </Portal>

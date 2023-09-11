@@ -2,6 +2,9 @@ import {Trip} from '../types/Trip';
 import {newId} from './newId';
 
 export function loadTrips(): Trip[] {
+    trips.sort((a: Trip, b: Trip) => {
+        return a.id > b.id ? -1 : a.id == b.id ? 0 : 1;
+    });
     return trips;
 }
 
@@ -23,7 +26,7 @@ export function deleteTrip({id}: {id: string}): void {
     trips.splice(index, 1); // Poista 1 alkio kohdasta index
 }
 
-const trips: Trip[] = [
+let trips: Trip[] = [
     {
         id: newId(),
         vehicleId: 'car1',

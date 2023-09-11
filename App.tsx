@@ -9,6 +9,8 @@ import {
 
 import NewTripCreator from './components/NewTripCreator';
 import TripList from './components/TripList';
+import {Trip} from './types/Trip';
+import {deleteTrip, loadTrips, saveTrip} from './utils/store';
 
 const theme = {
     ...DefaultTheme,
@@ -48,12 +50,35 @@ export default function App() {
 }
 
 function InnerApp() {
+    const [trips, setTrips] = React.useState<Trip[]>(loadTrips());
+
+    function TripListScreen() {
+        return (
+            <TripList
+                trips={trips}
+                saveTrip={saveTrip}
+                deleteTrip={deleteTrip}
+            />
+        );
+    }
+
+    function NewTripScreen({navigation}) {
+        return (
+            <NewTripCreator
+                onStarted={() => {
+                    setTrips(loadTrips());
+                    navigation.navigate('home');
+                }}
+            />
+        );
+    }
+
     return (
         <NavigationContainer>
             <Nav.Navigator screenOptions={getScreenOptions}>
                 <Nav.Screen
                     name="home"
-                    component={TripList}
+                    component={TripListScreen}
                     options={{title: 'Aloitusruutu'}}
                 />
                 <Nav.Screen
@@ -64,8 +89,4 @@ function InnerApp() {
             </Nav.Navigator>
         </NavigationContainer>
     );
-}
-
-function NewTripScreen({navigation}) {
-    return <NewTripCreator onStarted={() => navigation.navigate('home')} />;
 }
