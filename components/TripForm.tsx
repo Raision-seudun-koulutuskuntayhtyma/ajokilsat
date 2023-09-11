@@ -5,6 +5,7 @@ import {Button, SegmentedButtons, TextInput} from 'react-native-paper';
 import {Trip} from '../types/Trip';
 import {cleanNumberText, parseNumber} from '../utils/numbers';
 import {DateTimeField} from './DateTimeField';
+import {newId} from '../utils/newId';
 
 type Props = {
     initialValue?: Trip | null;
@@ -19,6 +20,7 @@ export default function TripForm({
 }: Props) {
     const defaultCar = 'car1';
 
+    const [id] = useState(iv?.id ?? newId());
     const [vehicle, setVehicle] = useState(iv?.vehicleId ?? defaultCar);
     const [description, setDescription] = useState(iv?.description ?? '');
     const [timestampAtBegin, setTimestampAtBegin] = useState<Date | null>(
@@ -39,6 +41,7 @@ export default function TripForm({
 
     function submitForm() {
         const trip: Trip = {
+            id,
             vehicleId: vehicle,
             description,
             timestampAtBegin,
