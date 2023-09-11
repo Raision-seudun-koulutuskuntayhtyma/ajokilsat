@@ -10,8 +10,8 @@ export default function TripList() {
 
     function ListRow({item: trip, index}: {item: Trip; index: number}) {
         return (
-            <Button onPress={() => setShownIndex(index)}>
-                <Text style={styles.item}>{trip.description}</Text>
+            <Button onPress={() => setShownIndex(index)} style={styles.item}>
+                <Text style={styles.itemText}>{trip.description}</Text>
             </Button>
         );
     }
@@ -27,7 +27,7 @@ export default function TripList() {
                 <TripForm
                     initialValue={shownTrip}
                     onSubmit={(trip: Trip) => {
-                        console.log('Tallennettu matka:', shownIndex, trip);
+                        console.log('Tallennetaan matka:', shownIndex, trip);
                         trips[shownIndex] = trip;
                         setShownIndex(null);
                     }}
@@ -53,14 +53,16 @@ export default function TripList() {
 
 const styles = StyleSheet.create({
     container: {
-        padding: 20,
+        padding: 10,
         backgroundColor: 'white',
     },
     list: {},
     item: {
-        padding: 2,
-        fontSize: 20,
-        height: 40,
+        padding: 4,
+        height: 44,
+    },
+    itemText: {
+        fontSize: 18,
     },
 });
 
