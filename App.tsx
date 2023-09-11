@@ -7,7 +7,7 @@ import {
     PaperProvider,
 } from 'react-native-paper';
 
-import NewTripForm from './components/NewTripForm';
+import NewTripCreator from './components/NewTripCreator';
 import TripList from './components/TripList';
 
 const theme = {
@@ -58,10 +58,14 @@ function InnerApp() {
                 />
                 <Nav.Screen
                     name="newTrip"
-                    component={NewTripForm}
+                    component={NewTripScreen}
                     options={{title: 'Uusi matka'}}
                 />
             </Nav.Navigator>
         </NavigationContainer>
     );
+}
+
+function NewTripScreen({navigation}) {
+    return <NewTripCreator onStarted={() => navigation.navigate('home')} />;
 }
