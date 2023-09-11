@@ -2,14 +2,12 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import * as React from 'react';
-import {View} from 'react-native';
 import {
-    Button,
     MD3LightTheme as DefaultTheme,
     PaperProvider,
 } from 'react-native-paper';
 
-import TripForm from './components/TripForm';
+import NewTripForm from './components/NewTripForm';
 import TripList from './components/TripList';
 
 const theme = {
@@ -25,7 +23,7 @@ const Nav = createBottomTabNavigator();
 
 const tabIcons = {
     home: ['ios-home', 'ios-home-outline'],
-    other: ['ios-car', 'ios-car-outline'],
+    newTrip: ['ios-car', 'ios-car-outline'],
 };
 
 const getScreenOptions = ({route}) => ({
@@ -59,21 +57,11 @@ function InnerApp() {
                     options={{title: 'Aloitusruutu'}}
                 />
                 <Nav.Screen
-                    name="other"
-                    component={TripForm}
+                    name="newTrip"
+                    component={NewTripForm}
                     options={{title: 'Uusi matka'}}
                 />
             </Nav.Navigator>
         </NavigationContainer>
-    );
-}
-
-function ButtonOnlyView({navigation}) {
-    return (
-        <View>
-            <Button onPress={() => navigation.navigate('other')}>
-                Syötä matka
-            </Button>
-        </View>
     );
 }
