@@ -52,12 +52,22 @@ export default function App() {
 function InnerApp() {
     const [trips, setTrips] = React.useState<Trip[]>(loadTrips());
 
+    function reloadTrips() {
+        setTrips(loadTrips());
+    }
+
     function TripListScreen() {
         return (
             <TripList
                 trips={trips}
-                saveTrip={saveTrip}
-                deleteTrip={deleteTrip}
+                saveTrip={(trip: Trip) => {
+                    saveTrip(trip);
+                    reloadTrips();
+                }}
+                deleteTrip={(trip: Trip) => {
+                    deleteTrip(trip);
+                    reloadTrips();
+                }}
             />
         );
     }
@@ -66,7 +76,7 @@ function InnerApp() {
         return (
             <NewTripCreator
                 onSubmit={() => {
-                    setTrips(loadTrips());
+                    reloadTrips();
                     navigation.navigate('home');
                 }}
             />
