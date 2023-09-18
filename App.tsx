@@ -65,7 +65,7 @@ function InnerApp() {
     function NewTripScreen({navigation}) {
         return (
             <NewTripCreator
-                onStarted={() => {
+                onSubmit={() => {
                     setTrips(loadTrips());
                     navigation.navigate('home');
                 }}

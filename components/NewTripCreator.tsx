@@ -5,10 +5,10 @@ import NewTripForm from './NewTripForm';
 import { ScrollView } from 'react-native';
 
 type Props = {
-    onStarted?: (trip: Trip) => void;
+    onSubmit?: (trip: Trip) => void;
 };
 
-export default function NewTripCreator({onStarted}: Props) {
+export default function NewTripCreator({onSubmit}: Props) {
     const [latestTripId, setLatestTripId] = useState<string | null>(null);
 
     return (
@@ -18,7 +18,7 @@ export default function NewTripCreator({onStarted}: Props) {
                 onSubmit={(trip: Trip) => {
                     saveTrip(trip);
                     setLatestTripId(trip.id);
-                    onStarted?.(trip);
+                    onSubmit?.(trip);
                 }}
             />
         </ScrollView>
