@@ -26,7 +26,7 @@ export function saveTrip(trip: Trip): void {
     const index = trips.findIndex((x) => x.id === trip.id);
     if (index < 0) {
         // Ei löytynyt id:llä => Uusi matka
-        trips.push(trip); // Lisätään annettu trip listan trips loppuun
+        trips.unshift(trip); // Lisätään annettu trip listan trips alkuun
     } else {
         trips[index] = trip; // Päivitetään ko. indexissä olevaa trippiä
     }
