@@ -2,19 +2,6 @@ import {Trip} from '../types/Trip';
 import {newId} from './newId';
 
 export function loadTrips(): Trip[] {
-    trips.sort((tripA: Trip, tripB: Trip) => {
-        const a = tripA.timestampAtBegin ?? null;
-        const b = tripB.timestampAtBegin ?? null;
-        if (a == b) {
-            // Vertaile id:n perusteella, jos timestampit ovat samat
-            // tai puuttuvat molemmista
-            const aId = tripA.id;
-            const bId = tripB.id;
-            return aId > bId ? -1 : aId == bId ? 0 : 1;
-        }
-        return a > b ? -1 : 1;
-    });
-
     // Pakota trips muuttuja vaihtumaan niin, että React huomaa sen
     // muuttuneen.
     trips = [...trips];
@@ -30,6 +17,20 @@ export function saveTrip(trip: Trip): void {
     } else {
         trips[index] = trip; // Päivitetään ko. indexissä olevaa trippiä
     }
+
+    // Järjestä tripit aloitusajan tai id:n mukaan
+    trips.sort((tripA: Trip, tripB: Trip) => {
+        const a = tripA.timestampAtBegin ?? null;
+        const b = tripB.timestampAtBegin ?? null;
+        if (a == b) {
+            // Vertaile id:n perusteella, jos timestampit ovat samat
+            // tai puuttuvat molemmista
+            const aId = tripA.id;
+            const bId = tripB.id;
+            return aId > bId ? -1 : aId == bId ? 0 : 1;
+        }
+        return a > b ? -1 : 1;
+    });
 }
 
 export function deleteTrip({id}: {id: string}): void {
