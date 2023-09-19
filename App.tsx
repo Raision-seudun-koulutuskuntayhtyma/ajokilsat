@@ -50,23 +50,28 @@ export default function App() {
 }
 
 function InnerApp() {
-    const [trips, setTrips] = React.useState<Trip[]>(loadTrips());
+    const [trips, setTrips] = React.useState<Trip[]>([]);
 
-    function reloadTrips() {
-        setTrips(loadTrips());
+    async function reloadTrips() {
+        const newTrips = await loadTrips();
+        setTrips(newTrips);
     }
+
+    React.useEffect(() => {
+        reloadTrips();
+    }, []);
 
     function TripListScreen() {
         return (
             <TripList
                 trips={trips}
-                saveTrip={(trip: Trip) => {
-                    saveTrip(trip);
-                    reloadTrips();
+                saveTrip={async (trip: Trip) => {
+                    await saveTrip(trip);
+                    await reloadTrips();
                 }}
-                deleteTrip={(trip: Trip) => {
-                    deleteTrip(trip);
-                    reloadTrips();
+                deleteTrip={async (trip: Trip) => {
+                    await deleteTrip(trip);
+                    await reloadTrips();
                 }}
             />
         );
@@ -75,8 +80,8 @@ function InnerApp() {
     function NewTripScreen({navigation}) {
         return (
             <NewTripCreator
-                onSubmit={() => {
-                    reloadTrips();
+                onSubmit={async () => {
+                    await reloadTrips();
                     navigation.navigate('home');
                 }}
             />

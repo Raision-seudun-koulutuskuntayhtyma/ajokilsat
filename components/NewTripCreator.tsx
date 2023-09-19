@@ -15,9 +15,9 @@ export default function NewTripCreator({onSubmit}: Props) {
         <ScrollView>
             <NewTripForm
                 key={latestTripId ?? ''}  // Vaihda Form aina kun tallennetaan
-                onSubmit={(trip: Trip) => {
-                    saveTrip(trip);
+                onSubmit={async (trip: Trip) => {
                     setLatestTripId(trip.id);
+                    await saveTrip(trip);
                     onSubmit?.(trip);
                 }}
             />

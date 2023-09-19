@@ -1,7 +1,7 @@
 import {Trip} from '../types/Trip';
 import {newId} from './newId';
 
-export function loadTrips(): Trip[] {
+export async function loadTrips(): Promise<Trip[]> {
     // Pakota trips muuttuja vaihtumaan niin, että React huomaa sen
     // muuttuneen.
     trips = [...trips];
@@ -9,7 +9,7 @@ export function loadTrips(): Trip[] {
     return trips;
 }
 
-export function saveTrip(trip: Trip): void {
+export async function saveTrip(trip: Trip): Promise<void> {
     const index = trips.findIndex((x) => x.id === trip.id);
     if (index < 0) {
         // Ei löytynyt id:llä => Uusi matka
@@ -33,7 +33,7 @@ export function saveTrip(trip: Trip): void {
     });
 }
 
-export function deleteTrip({id}: {id: string}): void {
+export async function deleteTrip({id}: {id: string}): Promise<void> {
     const index = trips.findIndex((x) => x.id === id);
     if (index < 0) {
         throw new Error(`Matkaa id:llä ${id} ei löydy`);
@@ -61,6 +61,5 @@ let trips: Trip[] = [
         routeDescription: 'Tampere - Turku - Laiva - Ahvenanmaa',
         odometerAtBegin: 125130,
         odometerAtEnd: 125445,
-
     },
 ];
