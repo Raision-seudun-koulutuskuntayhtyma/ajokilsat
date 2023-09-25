@@ -4,7 +4,7 @@ import {
     PaperProvider,
 } from 'react-native-paper';
 
-import {Main} from './components/Main';
+import Main from './components/Main';
 
 const theme = {
     ...DefaultTheme,

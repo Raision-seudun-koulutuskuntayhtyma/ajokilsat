@@ -28,7 +28,7 @@ const getScreenOptions = ({route}) => ({
     headerShown: true,
 });
 
-export function Main() {
+export default function Main() {
     const [trips, setTrips] = React.useState<Trip[]>([]);
 
     async function reloadTrips() {
