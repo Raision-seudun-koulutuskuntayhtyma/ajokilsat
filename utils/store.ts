@@ -1,15 +1,22 @@
 import {Trip} from '../types/Trip';
+import {loadJsonFile, overwriteJsonFile} from './jsonFiles';
 import {newId} from './newId';
 
-export async function loadTrips(): Promise<Trip[]> {
-    // Pakota trips muuttuja vaihtumaan niin, että React huomaa sen
-    // muuttuneen.
-    trips = [...trips];
+const TRIPS_FILE = 'ajokilsat.json';
 
-    return trips;
+let savedTrips: Trip[] | null = null;
+
+export async function loadTrips(reload: boolean = false): Promise<Trip[]> {
+    if (savedTrips === null || reload) {
+        savedTrips = await loadJsonFile(TRIPS_FILE);
+    }
+
+    return savedTrips ?? exampleTrips;
 }
 
 export async function saveTrip(trip: Trip): Promise<void> {
+    const trips = await loadTrips();
+
     const index = trips.findIndex((x) => x.id === trip.id);
     if (index < 0) {
         // Ei löytynyt id:llä => Uusi matka
@@ -31,17 +38,29 @@ export async function saveTrip(trip: Trip): Promise<void> {
         }
         return a > b ? -1 : 1;
     });
+    await saveTripsToFile(trips);
 }
 
 export async function deleteTrip({id}: {id: string}): Promise<void> {
+    const trips = await loadTrips();
     const index = trips.findIndex((x) => x.id === id);
     if (index < 0) {
         throw new Error(`Matkaa id:llä ${id} ei löydy`);
     }
     trips.splice(index, 1); // Poista 1 alkio kohdasta index
+    await saveTripsToFile(trips);
 }
 
-let trips: Trip[] = [
+async function saveTripsToFile(trips: Trip[]) {
+    // Tallenna myös muuttujaan, jotta loadTrips varmasti palauttaa
+    // tallennetut muutokset vaikka sitä kutsuttaisiin reload=false:lla.
+    // HUOM: Käyttää [...trips] decontruktointia, jotta savedTrips:n
+    // sisältö muuttuu jolloin React varmasti huomaa muutokset
+    savedTrips = [...trips];
+    await overwriteJsonFile(TRIPS_FILE, savedTrips);
+}
+
+const exampleTrips: Trip[] = [
     {
         id: newId(),
         vehicleId: 'car1',
