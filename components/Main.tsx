@@ -11,7 +11,7 @@ import TripList from './TripList';
 const Nav = createBottomTabNavigator();
 
 const tabIcons = {
-    home: ['ios-home', 'ios-home-outline'],
+    trips: ['ios-home', 'ios-home-outline'],
     newTrip: ['ios-car', 'ios-car-outline'],
 };
 
@@ -71,9 +71,9 @@ export default function Main() {
         <NavigationContainer>
             <Nav.Navigator screenOptions={getScreenOptions}>
                 <Nav.Screen
-                    name="home"
+                    name="trips"
                     component={TripListScreen}
-                    options={{title: 'Aloitusruutu'}}
+                    options={{title: 'Matkat'}}
                 />
                 <Nav.Screen
                     name="newTrip"
