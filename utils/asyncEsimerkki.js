@@ -1,14 +1,26 @@
+function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+async function juttu() {
+    await sleep(3000); // Odota 3 sekuntia
+    if (Math.random() < 0.5)
+        throw Error("Virhe!");
+    return "OK";
+}
+
+
 function haeJuttu() {
     console.log('Kutsutaan fetchiä');
-    const promise = fetch('http://localhost:8000');
+    const promise = juttu();
     console.log('Määritetään resultille then ja catch');
     promise
-        .then((response) => {
-            if (!response.ok) {
-                return Promise.reject(response);
-            }
-            return response;
-        })
+        // .then((response) => {
+        //     if (!response.ok) {
+        //         return Promise.reject(response);
+        //     }
+        //     return response;
+        // })
         .then((response) => {
             console.log('Valmis');
             console.log('Vastaus:', response);
@@ -24,10 +36,10 @@ function haeJuttu() {
 async function haeJuttu2() {
     let response;
     try {
-        response = await fetch('http://localhost:8000');
-        if (!response.ok) {
-            throw response;
-        }
+        response = await juttu();
+        // if (!response.ok) {
+        //     throw response;
+        // }
     } catch (error) {
         return "virhe";
     }
