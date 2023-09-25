@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+    ActivityIndicator,
     MD3LightTheme as DefaultTheme,
     PaperProvider,
 } from 'react-native-paper';
@@ -31,7 +32,7 @@ export default function App() {
 
     return (
         <PaperProvider theme={theme}>
-            {!settingsOk ? (
+            {settingsOk == null ? <ActivityIndicator/> : !settingsOk ? (
                 <SettingsScreen onChange={updateSettingsOk} />
             ) : (
                 <Main />
