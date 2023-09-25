@@ -6,13 +6,15 @@ import * as React from 'react';
 import {Trip} from '../types/Trip';
 import {deleteTrip, loadTrips, saveTrip} from '../utils/store';
 import NewTripCreator from './NewTripCreator';
+import OnTrip from './OnTrip';
 import TripList from './TripList';
 
 const Nav = createBottomTabNavigator();
 
 const tabIcons = {
-    trips: ['ios-home', 'ios-home-outline'],
+    trips: ['ios-list-circle', 'ios-list-circle-outline'],
     newTrip: ['ios-car', 'ios-car-outline'],
+    onTrip: ['ios-car', 'ios-car-outline'],
 };
 
 const getScreenOptions = ({route}) => ({
@@ -59,9 +61,9 @@ export default function Main() {
     function NewTripScreen({navigation}) {
         return (
             <NewTripCreator
-                onSubmit={async () => {
-                    await reloadTrips();
-                    navigation.navigate('home');
+                onSubmit={async (trip: Trip) => {
+                    reloadTrips();
+                    navigation.navigate('onTrip', {tripId: trip.id});
                 }}
             />
         );
@@ -79,6 +81,11 @@ export default function Main() {
                     name="newTrip"
                     component={NewTripScreen}
                     options={{title: 'Uusi matka'}}
+                />
+                <Nav.Screen
+                    name="onTrip"
+                    component={OnTrip}
+                    options={{title: 'Matkalla...'}}
                 />
             </Nav.Navigator>
         </NavigationContainer>

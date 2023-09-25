@@ -6,6 +6,13 @@ const TRIPS_FILE = 'ajokilsat.json';
 
 let savedTrips: Trip[] | null = null;
 
+export async function getTrip(tripId: string) {
+    const trips = await loadTrips();
+    const trip: Trip | undefined = trips.find((x) => x.id === tripId);
+    if (trip === undefined) throw Error(`Ei löydy matkaa id:llä ${tripId}`);
+    return trip;
+}
+
 export async function loadTrips(reload: boolean = false): Promise<Trip[]> {
     if (savedTrips === null || reload) {
         savedTrips = await loadJsonFile(TRIPS_FILE);
