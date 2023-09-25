@@ -52,7 +52,24 @@ export async function overwriteJsonFile(filename: string, data: any) {
     await FileSystem.writeAsStringAsync(uri, contents);
 }
 
+export async function hasSaveDirPermission(): Promise<boolean> {
+    const saveDirUri = await getAccessibleSaveDirUri();
+    return (saveDirUri) ? true : false;
+}
+
+export async function getSaveDirPermission(): Promise<void> {
+    await getPermissionToSaveDirUri();
+}
+
 async function getSaveDirUri(): Promise<string> {
+    let saveDirUri = await getAccessibleSaveDirUri();
+    if (!saveDirUri) {
+        saveDirUri = await getPermissionToSaveDirUri();
+    }
+    return saveDirUri;
+}
+
+async function getAccessibleSaveDirUri(): Promise<string | null> {
     const settings = await getSettings();
     const {saveDirUri} = settings;
 
@@ -62,7 +79,10 @@ async function getSaveDirUri(): Promise<string> {
             return saveDirUri;
         } catch {}
     }
+    return null;
+}
 
+async function getPermissionToSaveDirUri(): Promise<string> {
     const permResult = await SAF.requestDirectoryPermissionsAsync();
 
     if (!permResult.granted) {
