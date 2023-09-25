@@ -5,6 +5,8 @@ import {
 } from 'react-native-paper';
 
 import Main from './components/Main';
+import {hasSaveDirPermission} from './utils/jsonFiles';
+import SettingsScreen from './components/SettingsScreen';
 
 const theme = {
     ...DefaultTheme,
@@ -16,9 +18,24 @@ const theme = {
 };
 
 export default function App() {
+    const [settingsOk, setSettingsOk] = React.useState<boolean | null>(null);
+
+    async function updateSettingsOk() {
+        const hasPermission = await hasSaveDirPermission();
+        setSettingsOk(hasPermission);
+    }
+
+    React.useEffect(() => {
+        updateSettingsOk();
+    }, []);
+
     return (
         <PaperProvider theme={theme}>
-            <Main />
+            {!settingsOk ? (
+                <SettingsScreen onChange={updateSettingsOk} />
+            ) : (
+                <Main />
+            )}
         </PaperProvider>
     );
 }
