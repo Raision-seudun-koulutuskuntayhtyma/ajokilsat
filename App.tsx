@@ -6,8 +6,8 @@ import {
 } from 'react-native-paper';
 
 import Main from './components/Main';
-import {hasSaveDirPermission} from './utils/jsonFiles';
 import SettingsScreen from './components/SettingsScreen';
+import {hasSaveDirPermission} from './utils/jsonFiles';
 
 const theme = {
     ...DefaultTheme,
@@ -32,7 +32,9 @@ export default function App() {
 
     return (
         <PaperProvider theme={theme}>
-            {settingsOk == null ? <ActivityIndicator/> : !settingsOk ? (
+            {settingsOk == null ? (
+                <ActivityIndicator />
+            ) : !settingsOk ? (
                 <SettingsScreen onChange={updateSettingsOk} />
             ) : (
                 <Main />
