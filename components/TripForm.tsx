@@ -3,9 +3,10 @@ import {ScrollView} from 'react-native';
 import {Button, SegmentedButtons, TextInput} from 'react-native-paper';
 
 import {Trip} from '../types/Trip';
-import {cleanNumberText, parseNumber} from '../utils/numbers';
-import {DateTimeField} from './DateTimeField';
 import {newId} from '../utils/newId';
+import {cleanNumberText, parseNumber} from '../utils/numbers';
+import {dateToTimestamp, timestampToDate} from '../utils/time';
+import {DateTimeField} from './DateTimeField';
 
 type Props = {
     initialValue?: Trip | null;
@@ -24,10 +25,10 @@ export default function TripForm({
     const [vehicle, setVehicle] = useState(iv?.vehicleId ?? defaultCar);
     const [description, setDescription] = useState(iv?.description ?? '');
     const [timestampAtBegin, setTimestampAtBegin] = useState<Date | null>(
-        iv?.timestampAtBegin ?? null
+        timestampToDate(iv?.timestampAtBegin)
     );
     const [timestampAtEnd, setTimestampAtEnd] = useState<Date | null>(
-        iv?.timestampAtEnd ?? null
+        timestampToDate(iv?.timestampAtEnd)
     );
     const [odometerAtBegin, setOdometerAtBegin] = useState<string>(
         iv?.odometerAtBegin?.toString() ?? ''
@@ -44,8 +45,8 @@ export default function TripForm({
             id,
             vehicleId: vehicle,
             description,
-            timestampAtBegin,
-            timestampAtEnd,
+            timestampAtBegin: dateToTimestamp(timestampAtBegin),
+            timestampAtEnd: dateToTimestamp(timestampAtEnd),
             odometerAtBegin: parseNumber(odometerAtBegin),
             odometerAtEnd: parseNumber(odometerAtEnd),
             routeDescription,

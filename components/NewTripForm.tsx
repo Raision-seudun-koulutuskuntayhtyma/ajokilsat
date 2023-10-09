@@ -5,6 +5,7 @@ import {Button, SegmentedButtons, TextInput} from 'react-native-paper';
 import {Trip} from '../types/Trip';
 import {newId} from '../utils/newId';
 import {cleanNumberText, parseNumber} from '../utils/numbers';
+import {dateToTimestamp} from '../utils/time';
 
 type Props = {
     onSubmit?: (trip: Trip) => void;
@@ -23,7 +24,7 @@ export default function NewTripForm({onSubmit}: Props) {
             id: newId(),
             vehicleId: vehicle,
             description,
-            timestampAtBegin: new Date(),
+            timestampAtBegin: dateToTimestamp(new Date()),
             timestampAtEnd: null,
             odometerAtBegin: parseNumber(odometerAtBegin),
             odometerAtEnd: null,

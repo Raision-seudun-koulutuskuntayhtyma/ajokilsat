@@ -3,9 +3,11 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import * as React from 'react';
 import {useState} from 'react';
+import {ActivityIndicator} from 'react-native-paper';
 
+import {useDispatch, useSelector} from '../hooks';
+import {addOrUpdateTrip, loadTrips, removeTrip} from '../store/slices/trips';
 import {Trip} from '../types/Trip';
-import {deleteTrip, loadTrips, saveTrip} from '../utils/store';
 import NewTripCreator from './NewTripCreator';
 import TripList from './TripList';
 
@@ -30,12 +32,15 @@ const getScreenOptions = ({route}) => ({
 });
 
 export default function Main() {
-    const [trips, setTrips] = useState<Trip[]>([]);
+    const {list: trips, status: tripsStatus} = useSelector(
+        (state) => state.trips
+    );
+    const dispatch = useDispatch();
+
     const [shownTripId, setShownTripId] = useState<string | null>(null);
 
     async function reloadTrips() {
-        const newTrips = await loadTrips();
-        setTrips(newTrips);
+        dispatch(loadTrips());
     }
 
     React.useEffect(() => {
@@ -43,6 +48,7 @@ export default function Main() {
     }, []);
 
     function TripListScreen() {
+        if (tripsStatus == 'loading') return <ActivityIndicator />;
         return (
             <TripList
                 shownTripId={shownTripId}
@@ -51,13 +57,11 @@ export default function Main() {
                 onDismiss={() => setShownTripId(null)}
                 onSave={async (trip: Trip) => {
                     setShownTripId(null);
-                    await saveTrip(trip);
-                    await reloadTrips();
+                    dispatch(addOrUpdateTrip(trip));
                 }}
                 onDelete={async (trip: Trip) => {
                     setShownTripId(null);
-                    await deleteTrip(trip);
-                    await reloadTrips();
+                    dispatch(removeTrip(trip));
                 }}
             />
         );
@@ -67,7 +71,6 @@ export default function Main() {
         return (
             <NewTripCreator
                 onSubmit={async (trip: Trip) => {
-                    await reloadTrips();
                     setShownTripId(trip.id);
                     navigation.navigate('trips');
                 }}
