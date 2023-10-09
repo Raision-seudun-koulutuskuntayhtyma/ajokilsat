@@ -2,6 +2,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import * as React from 'react';
+import {useState} from 'react';
 
 import {Trip} from '../types/Trip';
 import {deleteTrip, loadTrips, saveTrip} from '../utils/store';
@@ -31,7 +32,8 @@ const getScreenOptions = ({route}) => ({
 });
 
 export default function Main() {
-    const [trips, setTrips] = React.useState<Trip[]>([]);
+    const [trips, setTrips] = useState<Trip[]>([]);
+    const [shownTripId, setShownTripId] = useState<string | null>(null);
 
     async function reloadTrips() {
         const newTrips = await loadTrips();
@@ -45,12 +47,17 @@ export default function Main() {
     function TripListScreen() {
         return (
             <TripList
+                shownTripId={shownTripId}
                 trips={trips}
-                saveTrip={async (trip: Trip) => {
+                onTripClick={(trip: Trip) => setShownTripId(trip.id)}
+                onDismiss={() => setShownTripId(null)}
+                onSave={async (trip: Trip) => {
+                    setShownTripId(null);
                     await saveTrip(trip);
                     await reloadTrips();
                 }}
-                deleteTrip={async (trip: Trip) => {
+                onDelete={async (trip: Trip) => {
+                    setShownTripId(null);
                     await deleteTrip(trip);
                     await reloadTrips();
                 }}
@@ -62,8 +69,9 @@ export default function Main() {
         return (
             <NewTripCreator
                 onSubmit={async (trip: Trip) => {
-                    reloadTrips();
-                    navigation.navigate('onTrip', {tripId: trip.id});
+                    await reloadTrips();
+                    setShownTripId(trip.id);
+                    navigation.navigate('trips');
                 }}
             />
         );
