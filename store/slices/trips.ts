@@ -21,28 +21,20 @@ export const tripsSlice = createSlice({
             {payload: trip}: PayloadAction<Trip>
         ) => {
             const index = trips.findIndex((x) => x.id === trip.id);
+            let needsSorting = true;
             if (index < 0) {
                 // Ei löytynyt id:llä => Uusi matka
                 trips.unshift(trip); // Lisätään annettu trip listan trips alkuun
+                if (trips.length <= 1 || isTripBeforeOther(trip, trips[1]))
+                    needsSorting = false;
             } else {
+                if (trips[index].timestampAtBegin == trip.timestampAtBegin)
+                    needsSorting = false;
                 trips[index] = trip; // Päivitetään ko. indexissä olevaa trippiä
             }
 
-            // TODO: Optimoi: Ei tarvi aina järjestää!
-
             // Järjestä tripit aloitusajan tai id:n mukaan
-            trips.sort((tripA: Trip, tripB: Trip) => {
-                const a = tripA.timestampAtBegin ?? null;
-                const b = tripB.timestampAtBegin ?? null;
-                if (a == b) {
-                    // Vertaile id:n perusteella, jos timestampit ovat samat
-                    // tai puuttuvat molemmista
-                    const aId = tripA.id;
-                    const bId = tripB.id;
-                    return aId > bId ? -1 : aId == bId ? 0 : 1;
-                }
-                return a > b ? -1 : 1;
-            });
+            if (needsSorting) trips.sort(compareTrips);
 
             tripFileStore.saveTripsToFile(trips);
         },
@@ -82,5 +74,24 @@ export const tripsSlice = createSlice({
 });
 
 export const {addOrUpdateTrip, removeTrip} = tripsSlice.actions;
+
+function isTripBeforeOther(trip: Trip, other: Trip): boolean {
+    return compareTrips(trip, other) <= 0; // trip < other
+}
+
+function compareTrips(tripA: Trip, tripB: Trip): number {
+    const a = tripA.timestampAtBegin ?? null;
+    const b = tripB.timestampAtBegin ?? null;
+    console.log(a, b, (tripA.description, tripB.description));
+    if (a == b) {
+        // Vertaile id:n perusteella, jos timestampit ovat samat
+        // tai puuttuvat molemmista
+        const aId = tripA.id;
+        const bId = tripB.id;
+        return aId > bId ? -1 : aId == bId ? 0 : 1;
+    }
+    if (a == null) return -1;
+    return a > b ? -1 : 1;
+}
 
 export default tripsSlice;
