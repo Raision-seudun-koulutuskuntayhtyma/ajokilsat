@@ -1,3 +1,5 @@
+import moment from 'moment';
+import 'moment/locale/fi';
 import * as React from 'react';
 import {
     ActivityIndicator,
@@ -10,6 +12,9 @@ import Main from './components/Main';
 import SettingsScreen from './components/SettingsScreen';
 import store from './store';
 import {hasSaveDirPermission} from './utils/jsonFiles';
+
+// Muotoile päivämäärät ja kellonajat Momentilla suomalaisessa muodossa
+moment.locale('fi');
 
 const theme = {
     ...DefaultTheme,
