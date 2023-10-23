@@ -1,4 +1,9 @@
-import {PayloadAction, createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import {
+    PayloadAction,
+    SerializedError,
+    createAsyncThunk,
+    createSlice,
+} from '@reduxjs/toolkit';
 
 import {Trip} from '../../types/Trip';
 import * as tripFileStore from '../../utils/tripFileStore';
@@ -6,6 +11,7 @@ import * as tripFileStore from '../../utils/tripFileStore';
 export type TripsState = {
     list: Trip[];
     status: 'loading' | 'idle' | 'failed';
+    error?: SerializedError | null;
 };
 
 export const loadTrips = createAsyncThunk('trips/loadTrips', async () => {
@@ -67,8 +73,9 @@ export const tripsSlice = createSlice({
                     state.list = action.payload;
                 }
             )
-            .addCase(loadTrips.rejected, (state) => {
+            .addCase(loadTrips.rejected, (state, action) => {
                 state.status = 'failed';
+                state.error = action.error;
             });
     },
 });

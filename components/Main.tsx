@@ -3,13 +3,19 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import * as React from 'react';
 import {useState} from 'react';
-import {ActivityIndicator} from 'react-native-paper';
+import {ActivityIndicator, Button, Text} from 'react-native-paper';
 
 import {useDispatch, useSelector} from '../hooks';
-import {addOrUpdateTrip, loadTrips, removeTrip} from '../store/slices/trips';
+import {
+    TripsState,
+    addOrUpdateTrip,
+    loadTrips,
+    removeTrip,
+} from '../store/slices/trips';
 import {Trip} from '../types/Trip';
 import NewTripCreator from './NewTripCreator';
 import TripList from './TripList';
+import {View} from 'react-native';
 
 const Nav = createBottomTabNavigator();
 
@@ -32,9 +38,11 @@ const getScreenOptions = ({route}) => ({
 });
 
 export default function Main() {
-    const {list: trips, status: tripsStatus} = useSelector(
-        (state) => state.trips
-    );
+    const {
+        list: trips,
+        status: tripsStatus,
+        error: tripsError,
+    } = useSelector((state) => state.trips);
     const dispatch = useDispatch();
 
     const [shownTripId, setShownTripId] = useState<string | null>(null);
@@ -49,6 +57,13 @@ export default function Main() {
 
     function TripListScreen() {
         if (tripsStatus == 'loading') return <ActivityIndicator />;
+        if (tripsStatus == 'failed')
+            return (
+                <View>
+                    <Text>{`Virhe ladattaessa matkoja: ${tripsError?.message}`}</Text>
+                    <Button onPress={reloadTrips}>Yritä uudelleen</Button>
+                </View>
+            );
         return (
             <TripList
                 shownTripId={shownTripId}
