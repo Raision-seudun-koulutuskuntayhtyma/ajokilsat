@@ -52,7 +52,6 @@ export default function TripForm({
             routeDescription,
         };
         onSubmit?.(trip);
-        console.debug(trip);
     }
 
     return (
