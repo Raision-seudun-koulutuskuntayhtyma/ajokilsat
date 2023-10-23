@@ -89,7 +89,6 @@ function isTripBeforeOther(trip: Trip, other: Trip): boolean {
 function compareTrips(tripA: Trip, tripB: Trip): number {
     const a = tripA.timestampAtBegin ?? null;
     const b = tripB.timestampAtBegin ?? null;
-    console.log(a, b, (tripA.description, tripB.description));
     if (a == b) {
         // Vertaile id:n perusteella, jos timestampit ovat samat
         // tai puuttuvat molemmista
